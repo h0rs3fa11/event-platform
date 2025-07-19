@@ -2,6 +2,7 @@ package space.qiuxuan.tickets.services.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import space.qiuxuan.tickets.domain.CreateEventRequest;
 import space.qiuxuan.tickets.domain.entities.Event;
@@ -14,6 +15,7 @@ import space.qiuxuan.tickets.repositories.UserRepository;
 import space.qiuxuan.tickets.services.EventService;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -55,8 +57,13 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public Page<Event> listEventsForOrganizer(UUID organizerId) {
-        return null;
+    public Page<Event> listEventsForOrganizer(UUID organizerId, Pageable pageable) {
+        return eventRepository.findByOrganizerId(organizerId, pageable);
+    }
+
+    @Override
+    public Optional<Event> getEventForOrganizer(UUID organizerId, UUID id) {
+        return eventRepository.findByIdAndOrganizerId(id, organizerId);
     }
 
 }
