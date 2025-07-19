@@ -10,10 +10,8 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 import space.qiuxuan.tickets.domain.CreateEventRequest;
-import space.qiuxuan.tickets.domain.dtos.CreateEventRequestDto;
-import space.qiuxuan.tickets.domain.dtos.CreateEventResponseDto;
-import space.qiuxuan.tickets.domain.dtos.GetEventDetailsResponseDto;
-import space.qiuxuan.tickets.domain.dtos.ListEventResponseDto;
+import space.qiuxuan.tickets.domain.UpdateEventRequest;
+import space.qiuxuan.tickets.domain.dtos.*;
 import space.qiuxuan.tickets.domain.entities.Event;
 import space.qiuxuan.tickets.mappers.EventMapper;
 import space.qiuxuan.tickets.services.EventService;
@@ -38,6 +36,21 @@ public class EventController {
         Event createdEvent = eventService.createEvent(userId, createEventRequest);
         CreateEventResponseDto createEventResponseDto = eventMapper.toDto(createdEvent);
         return new ResponseEntity<>(createEventResponseDto,HttpStatus.CREATED);
+    }
+
+    @PutMapping(path = "/{eventId}")
+    public ResponseEntity<UpdateEventResponseDto> createEvent(
+            @AuthenticationPrincipal Jwt jwt,
+            @PathVariable UUID eventId,
+            @Valid @RequestBody UpdateEventRequestDto updateEventRequestDto
+    ) {
+        UpdateEventRequest updateEventRequest = eventMapper.fromDto(updateEventRequestDto);
+        UUID userId = parseUserId(jwt);
+
+        Event updateEvent = eventService.updateEventForOrganizer(userId, eventId, updateEventRequest);
+
+        UpdateEventResponseDto updateEventResponseDto = eventMapper.toUpdateEventResponseDtoDto(updateEvent);
+        return ResponseEntity.ok(updateEventResponseDto);
     }
 
     @GetMapping
