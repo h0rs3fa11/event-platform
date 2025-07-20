@@ -18,6 +18,8 @@ public interface EventRepository extends JpaRepository<Event, UUID> {
 
     Page<Event> findByStatus(EventStatusEnum status, Pageable pageable);
 
+    Optional<Event> findByIdAndStatus(UUID id, EventStatusEnum status);
+
     @Query(value = "SELECT * FROM events WHERE " +
             "status = 'PUBLISHED' AND " +
             "to_tsvector('english', COALESCE(name, '') || ' ' || COALESCE(venue, '')) " +

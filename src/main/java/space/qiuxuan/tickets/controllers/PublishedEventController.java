@@ -4,14 +4,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import space.qiuxuan.tickets.domain.dtos.GetPublishedEventDetailsResponseDto;
 import space.qiuxuan.tickets.domain.dtos.ListPublishedEventResponseDto;
 import space.qiuxuan.tickets.domain.entities.Event;
 import space.qiuxuan.tickets.mappers.EventMapper;
 import space.qiuxuan.tickets.services.EventService;
+
+import java.util.UUID;
 
 @RestController
 @RequestMapping(path = "/api/v1/published-events")
@@ -32,5 +32,15 @@ public class PublishedEventController {
             events = eventService.listPublishedEvents(pageable);
         }
         return ResponseEntity.ok(events.map(eventMapper::toListPublishedEventResponseDto));
+    }
+
+    @GetMapping(path = "/{eventId}")
+    public ResponseEntity<GetPublishedEventDetailsResponseDto> getPublishedEvent(
+            @PathVariable UUID eventId
+    ) {
+        return eventService.getPublishedEvent(eventId)
+                .map(eventMapper::toGetPublishedEventDetailsResponseDto)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 }
