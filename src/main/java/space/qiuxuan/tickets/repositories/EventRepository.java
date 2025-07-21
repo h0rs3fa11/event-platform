@@ -5,12 +5,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 import space.qiuxuan.tickets.domain.entities.Event;
 import space.qiuxuan.tickets.domain.entities.EventStatusEnum;
 
 import java.util.Optional;
 import java.util.UUID;
 
+@Repository
 public interface EventRepository extends JpaRepository<Event, UUID> {
     Page<Event> findByOrganizerId(UUID organizerId, Pageable pageable);
 

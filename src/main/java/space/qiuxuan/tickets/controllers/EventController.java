@@ -15,8 +15,11 @@ import space.qiuxuan.tickets.domain.dtos.*;
 import space.qiuxuan.tickets.domain.entities.Event;
 import space.qiuxuan.tickets.mappers.EventMapper;
 import space.qiuxuan.tickets.services.EventService;
+import space.qiuxuan.tickets.util.JwtUtil;
 
 import java.util.UUID;
+
+import static space.qiuxuan.tickets.util.JwtUtil.parseUserId;
 
 @RestController
 @RequestMapping(path = "/api/v1/events")
@@ -82,9 +85,5 @@ public class EventController {
     ) {
         eventService.deleteEventForOrganizer(parseUserId(jwt), eventId);
         return ResponseEntity.noContent().build();
-    }
-
-    private UUID parseUserId(Jwt jwt) {
-        return UUID.fromString(jwt.getSubject());
     }
 }
